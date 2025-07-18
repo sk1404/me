@@ -1,0 +1,24 @@
+# Load synthesized design (assumes synthesis is already done)
+open_run synth_1
+
+# 1. Report total number of flip-flops
+set flipflops [get_cells -hierarchical -filter {PRIMITIVE_TYPE == "FD"}]
+set num_flipflops [llength $flipflops]
+puts "Total number of Flip-Flops: $num_flipflops"
+
+# 2. List all logic cells excluding BUFGs, BUFHs, VCC, and GND
+set logic_cells [get_cells -hier -filter { PRIMITIVE_TYPE != "BUFG" && PRIMITIVE_TYPE != "BUFH" && PRIMITIVE_TYPE != "GND" && PRIMITIVE_TYPE != "VCC" }]
+puts "\nLogic cells (excluding BUFG/BUFH/VCC/GND):"
+foreach cell $logic_cells {
+    puts $cell
+}
+
+# 3. Extract all paths with delay > 5ns and write to long_paths.rpt
+report_timing -delay_type max -max_paths 1000 -nworst 1000 -slack_lesser_than -5.0 -file long_paths.rpt
+puts "\nTiming paths with delay > 5ns written to 'long_paths.rpt'"
+
+# 4. Count number of Flip-Flops and AND gates specifically
+set and_gates [get_cells -hier -filter {PRIMITIVE_TYPE == "AND"}]
+set num_and_gates [llength $and_gates]
+puts "\nFlip-Flop count: $num_flipflops"
+puts "AND gate count: $num_and_gates"
