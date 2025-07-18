@@ -1,0 +1,15 @@
+///.v
+
+module adder (
+    input [3:0] a, b,
+    output [4:0] sum
+);
+endmodule
+
+
+//////csv_file
+
+Module,Direction,Port
+adder,input,a
+adder,input,b
+adder,output,sum
