@@ -1,24 +1,34 @@
-# Create a new project
-create_project my_project ./my_project -part xc7a35tcpg236-1
+# Checkout the repository: Write a Tcl script that automates the synthesis process for multiple RTL files stored in a directory.
+# It should:
+# - Loop through all `.v` files
+# - Add them to a Vivado project
+# - Launch synthesis
+# - Export a report of synthesized modules
 
-# Add all Verilog (.v) files from the current folder
-foreach file [glob *.v] {
+# Set project name and target directory
+set proj_name auto_synth_proj
+set top_module top      ;# Change this if you have a different top module
+set rtl_dir ./rtl       ;# Folder containing your .v files
+set part xc7z010clg400-1  ;# Change to match your FPGA part
+
+# Create a new project
+create_project $proj_name ./$proj_name -part $part
+set_property top $top_module [current_fileset]
+
+# Add all .v files from rtl_dir
+foreach file [glob -nocomplain "$rtl_dir/*.v"] {
     add_files $file
-    puts "Added: $file"
 }
 
-# Set top module name (change "top" to your actual top module name)
-set_property top top [current_fileset]
-
-# Run synthesis
-launch_runs synth_1
+# Launch synthesis
+launch_runs synth_1 -jobs 4
 wait_on_run synth_1
 
-# Open synthesized result
+# Open synthesized design
 open_run synth_1
 
-# Save reports
-report_utilization -file utilization.txt
-report_timing_summary -file timing.txt
+# Generate synthesis report
+report_utilization -file synth_report.rpt
+report_timing_summary -file timing_summary.rpt
 
-puts "Synthesis done. Reports saved."
+puts "✅ Synthesis completed. Reports saved in project folder."
