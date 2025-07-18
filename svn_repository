@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Checkout the repository to your local system.
+svn checkout https://svn.riouxsvn.com/axi_ip
+
+# Create a new project folder with your USN (e.g., 1BM24XXXX) inside the working copy.
+cd axi_ip
+mkdir 1BM24XXXX   # Replace with your actual USN
+
+# Add a new Verilog file `mod6.v` inside your folder.
+cd 1BM24XXXX
+touch mod6.v
+
+# Add both the file and folder to version control.
+cd ..
+svn add 1BM24XXXX
+
+# Commit the changes with a meaningful message.
+svn commit -m "Added mod6.v file under 1BM24XXXX folder"
+
+# View the status of your working copy and interpret the result.
+svn status
+# A = Added, M = Modified, ? = Untracked, ! = Missing
+
+# Display the last 3 commits made to the repository.
+svn log -l 3
+
+# Show differences between your current file and the last committed version.
+svn diff 1BM24XXXX/mod6.v
+
+# Revert local changes made to the file before committing (if any).
+svn revert 1BM24XXXX/mod6.v
+
+echo "✅ All SVN steps completed."
