@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# svn diff
+Shows the line-by-line differences between your local file and the last committed version in the repository.
+
+Example:
+svn diff mod6.v
+
+# svn revert
+Reverts your local changes and restores the file to the version in the repository. Useful when you want to discard modifications.
+
+Example:
+svn revert mod6.v
+
+# svn log -r
+Displays the commit log for a specific revision or range of revisions. Shows who committed, when, and the commit message.
+
+Example:
+svn log -r 5          # Shows commit info for revision 5
+svn log -r 2:5        # Shows logs from revision 2 to 5
+
+# svn cleanup
+Fixes locked or incomplete working copies. Use this when you see errors like "working copy locked".
+
+Example:
+svn cleanup
+
+# What to do in case of a file conflict
+1. Open the conflicted file and manually remove conflict markers like <<<<<<<, =======, >>>>>>>.
+2. After resolving, mark the file as resolved:
+   svn resolve mod6.v --accept=working
+3. Finally, commit the changes:
+   svn commit -m "Resolved conflict in mod6.v"
