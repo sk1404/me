@@ -1,33 +1,44 @@
 #!/bin/bash
 
-#--------------------------------------------
-# Script to check Verilog syntax using iverilog
-# - Compiles each .v file in current directory
-# - Logs errors to syntax_errors.log
-# - Displays a summary status
-#--------------------------------------------
+# Create or clear the log file
+echo "" > verilog_errors.log
 
-LOG_FILE="syntax_errors.log"
-> "$LOG_FILE"  # Clear previous log
+# Initialize counters
+total=0
+pass=0
+fail=0
 
-FILES_FOUND=false
+echo "Checking Verilog files for syntax errors..."
 
-for file in *.v; do
+# Loop through all .v files in current folder
+for file in *.v
+do
   if [ -f "$file" ]; then
-    FILES_FOUND=true
-    echo "Checking: $file"
-    iverilog -t null "$file" 2>> "$LOG_FILE"
+    total=$((total + 1))
+    echo "Checking $file..."
+
+    # Use iverilog to compile, send errors to log
+    iverilog -t null "$file" 2>> verilog_errors.log
+
+    if [ $? -eq 0 ]; then
+      echo "$file: OK"
+      pass=$((pass + 1))
+    else
+      echo "$file: ERROR (see log)"
+      fail=$((fail + 1))
+    fi
   fi
 done
 
-if ! $FILES_FOUND; then
-  echo "⚠️ No Verilog (.v) files found in the current directory."
-  exit 1
-fi
+# Final summary
+echo ""
+echo "Total files : $total"
+echo "Passed      : $pass"
+echo "Failed      : $fail"
+echo "Log file    : verilog_errors.log"
 
-if [ -s "$LOG_FILE" ]; then
-  echo "❌ Syntax errors detected. Check '$LOG_FILE' for details."
+if [ $fail -eq 0 ]; then
+  echo "✅ All files compiled successfully!"
 else
-  echo "✅ All Verilog files compiled successfully (no syntax errors)."
-  rm "$LOG_FILE"
+  echo "⚠️ Some files have syntax errors."
 fi
