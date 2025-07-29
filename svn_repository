@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Checkout the repository to your local system.
 svn checkout https://svn.riouxsvn.com/axi_ip
 
