@@ -40,7 +40,7 @@ print "Flip-flop instances : $ff_count\n";
 
 
 
-
+//example
 
 module top;
   reg clk, rst, d;
@@ -54,6 +54,8 @@ module top;
   end
 endmodule
 
+
+//output
 
 
 Module declarations : 1
