@@ -1,7 +1,5 @@
 # Open the implemented design
 open_run impl_1
-
-
 # 1. Generate overall timing summary
 report_timing_summary \
   -delay_type min_max \
