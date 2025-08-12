@@ -42,3 +42,38 @@ if [ $fail -eq 0 ]; then
 else
   echo "⚠️ Some files have syntax errors."
 fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Checking Verilog files for syntax errors...
+Checking asss.v...
+asss.v: ERROR (see log)
+Checking scount.v...
+scount.v: ERROR (see log)
+Checking sddasdf.v...
+sddasdf.v: ERROR (see log)
+Checking sdfg.v...
+sdfg.v: ERROR (see log)
+
+Total files : 4
+Passed      : 0
+Failed      : 4
+Log file    : verilog_errors.log
+⚠️ Some files have syntax errors.
