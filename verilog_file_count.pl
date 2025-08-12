@@ -2,62 +2,39 @@
 use strict;
 use warnings;
 
-# Check for input file
-die "Usage: perl count_verilog_elements.pl <file.v>\n" unless @ARGV == 1;
-my $file = $ARGV[0];
+# Check if file is given
+if (@ARGV != 1) {
+    die "Usage: $0 <verilog_file>\n";
+}
 
-# Counters
-my ($module_count, $always_count, $ff_count) = (0, 0, 0);
+my $filename = $ARGV[0];
 
-# Flip-flop module names to match (extend if needed)
-my @ff_names = qw(DFF FDRE DFFR DFFS DFFSR);
-my $ff_regex = join("|", @ff_names);
+open(my $fh, '<', $filename) or die "Could not open file '$filename': $!";
 
-# Open Verilog file
-open my $fh, '<', $file or die "Cannot open $file: $!";
+my $module_count = 0;
+my $always_count = 0;
+my $ff_count = 0;
 
-while (<$fh>) {
-    # Remove comments
-    s|//.*||;
-
+while (my $line = <$fh>) {
+    chomp $line;
+    
+    # Remove comments for clean matching
+    $line =~ s/\/\/.*//;           # Single-line comments
+    $line =~ s/\/\*.*?\*\///g;     # Inline block comments
+    
     # Count module declarations
-    $module_count++ if /\bmodule\b/;
-
+    $module_count++ if ($line =~ /\bmodule\b/);
+    
     # Count always blocks
-    $always_count++ if /\balways\b/;
-
-    # Count flip-flop instantiations
-    $ff_count++ if /\b($ff_regex)\b/;
+    $always_count++ if ($line =~ /\balways\b/);
+    
+    # Count flip-flop instances (case-insensitive)
+    $ff_count++ if ($line =~ /\b(DFF|FDRE)\b/i);
 }
 
 close $fh;
 
-# Print results
-print "Module declarations : $module_count\n";
-print "Always blocks       : $always_count\n";
-print "Flip-flop instances : $ff_count\n";
-
-
-
-
-//example
-
-module top;
-  reg clk, rst, d;
-  wire q;
-
-  DFF dff1 (.clk(clk), .d(d), .q(q));
-  FDRE fdre1 (.C(clk), .D(d), .Q(q), .R(rst));
-
-  always @(posedge clk) begin
-    // some logic
-  end
-endmodule
-
-
-//output
-
-
-Module declarations : 1
-Always blocks       : 1
-Flip-flop instances : 2
+print "Summary for file: $filename\n";
+print "Modules found: $module_count\n";
+print "Always blocks found: $always_count\n";
+print "Flip-flop instances found: $ff_count\n";
