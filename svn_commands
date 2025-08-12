@@ -6,6 +6,8 @@ Shows the line-by-line differences between your local file and the last committe
 Example:
 svn diff mod6.v
 
+This will show which lines were added, removed, or modified in mod6.v compared to the last committed version.
+
 # svn revert
 Reverts your local changes and restores the file to the version in the repository. Useful when you want to discard modifications.
 
